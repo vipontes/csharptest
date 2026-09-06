@@ -1,0 +1,16 @@
+# Build output
+bin/
+obj/
+
+# Editor / IDE
+.vs/
+.vscode/
+.idea/
+*.user
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS cruft
+.DS_Store
+Thumbs.db

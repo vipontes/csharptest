@@ -1,0 +1,14 @@
+<Window x:Class="DwgCoreTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DwgCoreTest"
+        Title="dwgcore WPF embedding test" Height="700" Width="1000">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="8">
+            <Button x:Name="OpenButton" Content="Open..." Padding="8,2" Click="OpenButton_Click"/>
+            <Button x:Name="ZoomFitButton" Content="Zoom Fit" Padding="8,2" Margin="8,0,0,0" Click="ZoomFitButton_Click"/>
+            <TextBlock x:Name="StatusText" VerticalAlignment="Center" Margin="12,0,0,0"/>
+        </StackPanel>
+        <local:DwgHwndHost x:Name="Viewport"/>
+    </DockPanel>
+</Window>

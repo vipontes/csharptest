@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Minimal WPF harness for dwgcore.dll: exists purely to verify the
+    native interop DLL end to end (HWND embedding via HwndHost, and the
+    cross-thread marshaling in dwgcore's QtEngine). See ../dwgcore/README.md
+    for the full design.
+
+    Platform-specific (x64/x86), not AnyCPU: dwgcore.dll is a native
+    dependency, so this process's bitness must match the DLL it loads.
+  -->
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>DwgCoreTest</AssemblyName>
+    <Platforms>x64;x86</Platforms>
+    <RuntimeIdentifier Condition="'$(Platform)'=='x64'">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(Platform)'=='x86'">win-x86</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- Per-Monitor V2 DPI awareness; see dwgcore/README.md's DPI note:
+         without this, the embedded Qt viewport double-scales relative to
+         WPF on non-100% displays. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <!-- dwgcore.dll plus every Qt runtime DLL/plugin windeployqt collected
+       next to it (see ../dwgcore/README.md's build steps), one source tree
+       per bitness, copied into this app's output preserving the plugin
+       subfolder layout (platforms/, styles/, imageformats/, ...) that Qt's
+       plugin loader expects relative to the executable. -->
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <QtRuntimeFiles Include="..\dwgcore\build\Release\**\*.dll" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='x86'">
+    <QtRuntimeFiles Include="..\dwgcore\build-x86\Release\**\*.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="@(QtRuntimeFiles)">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
